@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liso's Study Room - Medical Study Platform</title>
+    <style>
+        :root {
+            --primary: #3a7bd5;
+            --secondary: #00d2ff;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+            --text: #333333;
+            --bg-gradient: linear-gradient(to right, #3a7bd5, #00d2ff);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--text);
+            line-height: 1.6;
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        
+        header {
+            grid-column: 1 / 3;
+            background: var(--bg-gradient);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .sidebar {
+            background-color: white;
+            color: var(--dark);
+            padding: 1.5rem;
+            overflow-y: auto;
+            border-right: 1px solid #eee;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .sidebar-section h2 .icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .module-list {
+            list-style: none;
+        }
+        
+        .module-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .module-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .module-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .module-btn .icon {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .tool-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .tool-btn:hover {
+            background-color: #2a5da3;
+            transform: translateX(5px);
+        }
+        
+        .tool-btn .icon {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+            background-color: white;
+        }
+        
+        .tab {
+            display: none;
+        }
+        
+        .tab.active {
+            display: block;
+        }
+        
+        /* AI Assistant Styles */
+        .ai-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            height: calc(100vh - 150px);
+        }
+        
+        .ai-chat {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eee;
+        }
+        
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .chat-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .chat-header .ai-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            margin-bottom: 0.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            max-width: 80%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            line-height: 1.5;
+        }
+        
+        .user-message {
+            background-color: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .ai-message {
+            background-color: #f0f7ff;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+            color: var(--dark);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            padding: 1rem;
+            background-color: #f0f7ff;
+            border-radius: 12px;
+            width: fit-content;
+            margin-bottom: 0.5rem;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin: 0 3px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .chat-input {
+            flex-grow: 1;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+        }
+        
+        .send-btn {
+            padding: 0 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .send-btn:hover {
+            background-color: #2a5da3;
+        }
+
+        /* New styles for upload and Teams integration */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .upload-btn {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .teams-btn {
+            background-color: #6264A7;
+            color: white;
+        }
+        
+        .mic-btn {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(58, 123, 213, 0.05);
+        }
+        
+        .teams-input-area {
+            margin-top: 1rem;
+        }
+        
+        .teams-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Study Planner Styles */
+        .planner-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .day-column {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 300px;
+        }
+        
+        .day-header {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            color: var(--primary);
+        }
+        
+        .study-task {
+            background-color: white;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .task-time {
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+        
+        .task-subject {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+        
+        .task-notes {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .task-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.3rem;
+        }
+        
+        .task-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: white;
+        }
+        
+        .edit-btn {
+            background-color: var(--primary);
+        }
+        
+        .delete-btn {
+            background-color: var(--danger);
+        }
+        
+        .add-task-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        /* Pomodoro Timer Styles */
+        .timer-container {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .timer-display {
+            font-size: 5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            color: var(--primary);
+            font-family: monospace;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timer-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+        }
+        
+        .start-btn {
+            background-color: var(--success);
+        }
+        
+        .pause-btn {
+            background-color: var(--warning);
+        }
+        
+        .reset-btn {
+            background-color: var(--danger);
+        }
+        
+        .timer-settings {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .time-setting {
+            text-align: center;
+        }
+        
+        .time-setting label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .time-setting input {
+            width: 60px;
+            padding: 0.5rem;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Microphone styles */
+        .mic-btn.listening {
+            animation: pulse 1.5s infinite;
+            background-color: var(--danger);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .transcript-display {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .ai-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .planner-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" width="40" height="40" fill="white">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/>
+                </svg>
+                <span>Liso's Study Room</span>
+            </div>
+            <div class="header-controls">
+                <div id="current-time"></div>
+            </div>
+        </header>
+
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                    </svg>
+                    Medical Shelves
+                </h2>
+                <ul class="module-list">
+                    <li>
+                        <button class="module-btn" onclick="openModule('anatomical-pathology')">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/>
+                            </svg>
+                            Anatomical Pathology
+                        </button>
+                    </li>
+                    <li>
+                        <button class="module-btn" onclick="openModule('chemical-pathology')">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                            Chemical Pathology
+                        </button>
+                    </li>
+                    <li>
+                        <button class="module-btn" onclick="openModule('microbiology')">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/>
+                            </svg>
+                            Microbiology
+                        </button>
+                    </li>
+                    <li>
+                        <button class="module-btn" onclick="openModule('pharmacology')">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                            Pharmacology
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                    Study Tools
+                </h2>
+                <button class="tool-btn" onclick="openTab('study-planner')">
+                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                    </svg>
+                    Study Planner
+                </button>
+                <button class="tool-btn" onclick="openTab('pomodoro')">
+                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm3 12h-2v-2h2v2z"/>
+                    </svg>
+                    Pomodoro Timer
+                </button>
+                <button class="tool-btn" onclick="openTab('ai-assistant')">
+                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                    AI Assistant
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- AI Assistant Tab -->
+            <div id="ai-assistant" class="tab active">
+                <div class="motivation-bar">
+                    "The expert in anything was once a beginner." — Helen Hayes
+                </div>
+                
+                <div class="ai-container">
+                    <div class="ai-chat">
+                        <div class="chat-header">
+                            <div class="ai-icon">AI</div>
+                            <h2>AI Study Assistant</h2>
+                        </div>
+                        
+                        <!-- Action buttons for upload, Teams, and microphone -->
+                        <div class="action-buttons">
+                            <button class="action-btn upload-btn" onclick="toggleUploadArea()">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                </svg>
+                                Upload File
+                            </button>
+                            <button class="action-btn teams-btn" onclick="toggleTeamsInput()">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm3 12h-2v-2h2v2z"/>
+                                </svg>
+                                Teams Recording
+                            </button>
+                            <button class="action-btn mic-btn" id="mic-button" onclick="toggleMicrophone()">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                                    <path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3zm5 6a5 5 0 0 0-10 0v4a5 5 0 0 0 10 0V8z"/>
+                                    <path d="M5 11a1 1 0 0 1 1 1 6 6 0 0 0 12 0 1 1 0 1 1 2 0 8 8 0 0 1-7 7.94V21h2a1 1 0 0 1 0 2h-6a1 1 0 0 1 0-2h2v-2.06A8 8 0 0 1 4 12a1 1 0 0 1 1-1z"/>
+                                </svg>
+                                Microphone
+                            </button>
+                        </div>
+                        
+                        <!-- Add this new div for showing live transcript -->
+                        <div id="transcript-display" class="transcript-display hidden"></div>
+                        
+                        <!-- Upload area (hidden by default) -->
+                        <div id="upload-area" class="upload-area hidden" onclick="document.getElementById('file-upload').click()">
+                            <svg viewBox="0 0 24 24" width="48" height="48" fill="#3a7bd5">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                            <p>Click to upload or drag and drop files</p>
+                            <input type="file" id="file-upload" class="hidden" multiple>
+                        </div>
+                        
+                        <!-- Teams input area (hidden by default) -->
+                        <div id="teams-input-area" class="teams-input-area hidden">
+                            <input type="text" id="teams-link" class="teams-input" placeholder="Paste Teams recording link">
+                            <button class="action-btn teams-btn" onclick="addTeamsLink()">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm3 12h-2v-2h2v2z"/>
+                                </svg>
+                                Add Link
+                            </button>
+                        </div>
+                        
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="message ai-message">
+                                Hello! I'm your AI study assistant. How can I help you with your medical studies today?
+                            </div>
+                            <div class="message ai-message">
+                                I'm ready to help with your anatomical pathology studies. What would you like to know?
+                            </div>
+                            <div class="message ai-message">
+                                I'm ready to help with your chemical pathology studies. What would you like to know?
+                            </div>
+                            <div class="message user-message">
+                                what is CRP?
+                            </div>
+                            <div class="message ai-message">
+                                <strong>CRP (C-reactive protein)</strong> is a protein made by the liver that rises in response to inflammation. It's an acute-phase reactant and a marker for inflammation in the body. Elevated CRP levels can indicate:<br><br>
+                                • Infections (bacterial more than viral)<br>
+                                • Inflammatory conditions (e.g., rheumatoid arthritis)<br>
+                                • Tissue damage or trauma<br>
+                                • Cardiovascular disease risk<br><br>
+                                Normal range is typically &lt;10 mg/L. Would you like more details about CRP testing or interpretation?
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="user-input" placeholder="Ask any medical study question..." onkeypress="handleKeyPress(event)">
+                            <button class="send-btn" onclick="sendMessage()">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
+                                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Planner Tab -->
+            <div id="study-planner" class="tab">
+                <h1>Study Planner</h1>
+                <div class="planner-container" id="planner-container">
+                    <!-- Days will be added dynamically -->
+                </div>
+            </div>
+            
+            <!-- Pomodoro Timer Tab -->
+            <div id="pomodoro" class="tab">
+                <div class="timer-container">
+                    <h1>Pomodoro Timer</h1>
+                    <div class="timer-display" id="timer-display">25:00</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn start-btn" id="start-timer" onclick="startTimer()">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            Start
+                        </button>
+                        <button class="timer-btn pause-btn" id="pause-timer" onclick="pauseTimer()" disabled>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                            </svg>
+                            Pause
+                        </button>
+                        <button class="timer-btn reset-btn" id="reset-timer" onclick="resetTimer()" disabled>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                                <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                            </svg>
+                            Reset
+                        </button>
+                    </div>
+                    <div class="timer-settings">
+                        <div class="time-setting">
+                            <label for="work-duration">Work (min)</label>
+                            <input type="number" id="work-duration" min="1" max="60" value="25">
+                        </div>
+                        <div class="time-setting">
+                            <label for="break-duration">Break (min)</label>
+                            <input type="number" id="break-duration" min="1" max="30" value="5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            initializeStudyPlanner();
+        });
+
+        // Update current time display
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        // Tab navigation
+        function openTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Module navigation
+        function openModule(moduleId) {
+            openTab('ai-assistant');
+            const greeting = getModuleGreeting(moduleId);
+            addBotMessage(greeting);
+        }
+
+        function getModuleGreeting(module) {
+            const greetings = {
+                'anatomical-pathology': "I'm ready to help with Anatomical Pathology. Ask me about histopathology, gross pathology, or any related topics!",
+                'chemical-pathology': "I can assist with Chemical Pathology questions. Ask me about metabolic disorders, lab tests, or biochemical pathways!",
+                'microbiology': "Let's discuss Microbiology! I can help with bacteriology, virology, mycology, or parasitology concepts.",
+                'pharmacology': "Pharmacology is my specialty! Ask me about drug mechanisms, side effects, or therapeutic uses."
+            };
+            return greetings[module] || "How can I help you with your medical studies today?";
+        }
+
+        // Initialize Study Planner
+        function initializeStudyPlanner() {
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const plannerContainer = document.getElementById('planner-container');
+            
+            days.forEach(day => {
+                const dayColumn = document.createElement('div');
+                dayColumn.className = 'day-column';
+                dayColumn.innerHTML = `
+                    <div class="day-header">${day}</div>
+                    <button class="add-task-btn" onclick="addNewTask('${day}')">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        Add Task
+                    </button>
+                `;
+                plannerContainer.appendChild(dayColumn);
+            });
+            
+            // Load sample tasks
+            addSampleTasks();
+        }
+        
+        function addSampleTasks() {
+            const sampleTasks = [
+                { day: 'Monday', time: '9:00 AM - 10:30 AM', subject: 'Anatomical Pathology', notes: 'Review Chapter 4 - Neoplasia' },
+                { day: 'Tuesday', time: '2:00 PM - 3:30 PM', subject: 'Microbiology', notes: 'Bacterial classification' },
+                { day: 'Thursday', time: '4:00 PM - 5:30 PM', subject: 'Pharmacology', notes: 'Antibiotics mechanisms' },
+                { day: 'Saturday', time: '10:00 AM - 12:00 PM', subject: 'Chemical Pathology', notes: 'Electrolyte disorders' }
+            ];
+            
+            sampleTasks.forEach(task => {
+                addTaskToDay(task.day, task.time, task.subject, task.notes);
+            });
+        }
+        
+        function addNewTask(day) {
+            const taskName = prompt(`Enter task name for ${day}:`);
+            if (taskName) {
+                const taskTime = prompt('Enter time (e.g., 2:00 PM - 3:30 PM):');
+                const taskNotes = prompt('Enter notes:');
+                addTaskToDay(day, taskTime || 'No time specified', taskName, taskNotes || 'No notes');
+            }
+        }
+        
+        function addTaskToDay(day, time, subject, notes) {
+            const dayColumns = document.querySelectorAll('.day-column');
+            let targetColumn;
+            
+            dayColumns.forEach(column => {
+                if (column.querySelector('.day-header').textContent === day) {
+                    targetColumn = column;
+                }
+            });
+            
+            if (targetColumn) {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'study-task';
+                
+                taskDiv.innerHTML = `
+                    <div class="task-time">${time}</div>
+                    <div class="task-subject">${subject}</div>
+                    <div class="task-notes">${notes}</div>
+                    <div class="task-actions">
+                        <button class="task-btn edit-btn" onclick="editTask(this.parentNode.parentNode, '${day}')">✏️</button>
+                        <button class="task-btn delete-btn" onclick="this.parentNode.parentNode.remove()">🗑️</button>
+                    </div>
+                `;
+                
+                // Add before the "Add Task" button
+                const addButton = targetColumn.querySelector('.add-task-btn');
+                targetColumn.insertBefore(taskDiv, addButton);
+            }
+        }
+        
+        function editTask(taskDiv, day) {
+            const currentName = taskDiv.querySelector('.task-subject').textContent;
+            const currentTime = taskDiv.querySelector('.task-time').textContent;
+            const currentNotes = taskDiv.querySelector('.task-notes').textContent;
+            
+            const newName = prompt('Edit task name:', currentName);
+            if (newName === null) return;
+            
+            const newTime = prompt('Edit time:', currentTime);
+            const newNotes = prompt('Edit notes:', currentNotes);
+            
+            taskDiv.querySelector('.task-subject').textContent = newName;
+            taskDiv.querySelector('.task-time').textContent = newTime || currentTime;
+            taskDiv.querySelector('.task-notes').textContent = newNotes || currentNotes;
+        }
+
+        // Pomodoro Timer Functions
+        let timerInterval;
+        let isTimerRunning = false;
+        let isWorkTime = true;
+        let timeLeft = 25 * 60; // 25 minutes in seconds
+        let workDuration = 25;
+        let breakDuration = 5;
+        
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                document.getElementById('start-timer').disabled = true;
+                document.getElementById('pause-timer').disabled = false;
+                document.getElementById('reset-timer').disabled = false;
+                
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+        
+        function pauseTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('start-timer').disabled = false;
+            document.getElementById('pause-timer').disabled = true;
+        }
+        
+        function resetTimer() {
+            pauseTimer();
+            isWorkTime = true;
+            workDuration = parseInt(document.getElementById('work-duration').value);
+            breakDuration = parseInt(document.getElementById('break-duration').value);
+            timeLeft = workDuration * 60;
+            updateTimerDisplay();
+            document.getElementById('reset-timer').disabled = true;
+        }
+        
+        function updateTimer() {
+            timeLeft--;
+            
+            if (timeLeft <= 0) {
+                // Timer completed
+                clearInterval(timerInterval);
+                const alertMessage = isWorkTime ? 
+                    "Work session complete! Time for a break." : 
+                    "Break over! Time to get back to work.";
+                alert(alertMessage);
+                
+                isWorkTime = !isWorkTime;
+                timeLeft = (isWorkTime ? workDuration : breakDuration) * 60;
+                
+                if (isWorkTime) {
+                    startTimer(); // Auto-start next work session
+                } else {
+                    isTimerRunning = false;
+                    document.getElementById('start-timer').disabled = false;
+                    document.getElementById('pause-timer').disabled = true;
+                }
+            }
+            
+            updateTimerDisplay();
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer-display').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Microphone functionality
+        let recognition;
+        let isListening = false;
+        let finalTranscript = '';
+        
+        function toggleMicrophone() {
+            const micButton = document.getElementById('mic-button');
+            const transcriptDisplay = document.getElementById('transcript-display');
+            
+            if (!isListening) {
+                startListening();
+                micButton.classList.add('listening');
+                transcriptDisplay.classList.remove('hidden');
+                transcriptDisplay.textContent = "Listening...";
+            } else {
+                stopListening();
+                micButton.classList.remove('listening');
+                transcriptDisplay.classList.add('hidden');
+                
+                // Send the final transcript as a message if not empty
+                if (finalTranscript.trim() !== '') {
+                    sendVoiceMessage(finalTranscript);
+                }
+                finalTranscript = '';
+            }
+        }
+        
+        function startListening() {
+            // Initialize speech recognition
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            
+            recognition.onstart = function() {
+                isListening = true;
+            };
+            
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript + ' ';
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                // Display interim results
+                document.getElementById('transcript-display').textContent = 
+                    finalTranscript + interimTranscript;
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+                document.getElementById('transcript-display').textContent = 
+                    "Error: " + event.error;
+                stopListening();
+            };
+            
+            recognition.onend = function() {
+                if (isListening) {
+                    // Restart recognition if still in listening mode
+                    recognition.start();
+                }
+            };
+            
+            recognition.start();
+        }
+        
+        function stopListening() {
+            if (recognition) {
+                recognition.stop();
+            }
+            isListening = false;
+        }
+        
+        function sendVoiceMessage(transcript) {
+            // Add the voice message to chat
+            addUserMessage(transcript);
+            
+            // Show typing indicator
+            const typing = document.createElement('div');
+            typing.className = 'typing-indicator';
+            typing.id = 'typing-indicator';
+            typing.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            document.getElementById('chat-messages').appendChild(typing);
+            
+            // Scroll to bottom
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Simulate AI thinking and response
+            setTimeout(() => {
+                document.getElementById('typing-indicator').remove();
+                const response = generateAIResponse(transcript);
+                addBotMessage(response);
+            }, 1500);
+        }
+
+        // Toggle upload area visibility
+        function toggleUploadArea() {
+            const uploadArea = document.getElementById('upload-area');
+            const teamsInput = document.getElementById('teams-input-area');
+            uploadArea.classList.toggle('hidden');
+            teamsInput.classList.add('hidden');
+            
+            // Reset file input
+            document.getElementById('file-upload').value = '';
+        }
+
+        // Toggle Teams input area visibility
+        function toggleTeamsInput() {
+            const teamsInput = document.getElementById('teams-input-area');
+            const uploadArea = document.getElementById('upload-area');
+            teamsInput.classList.toggle('hidden');
+            uploadArea.classList.add('hidden');
+            
+            // Reset input
+            document.getElementById('teams-link').value = '';
+        }
+
+        // Add Teams recording link
+        function addTeamsLink() {
+            const link = document.getElementById('teams-link').value.trim();
+            if (link && link.includes('teams.microsoft.com')) {
+                addUserMessage(`Teams recording link: ${link}`);
+                document.getElementById('teams-link').value = '';
+                document.getElementById('teams-input-area').classList.add('hidden');
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    addBotMessage("Thanks for sharing the Teams recording link. Would you like me to summarize the key points from this recording?");
+                }, 1000);
+            } else {
+                alert("Please enter a valid Microsoft Teams recording link");
+            }
+        }
+
+        // Handle file upload
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                let fileList = "Uploaded files:\n";
+                for (let i = 0; i < files.length; i++) {
+                    fileList += `• ${files[i].name} (${(files[i].size / 1024).toFixed(2)} KB)\n`;
+                }
+                addUserMessage(fileList);
+                document.getElementById('upload-area').classList.add('hidden');
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    addBotMessage("I've received your files. Would you like me to analyze these documents or help you study their content?");
+                }, 1000);
+            }
+        });
+
+        // AI Chat Functions
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                // Show typing indicator
+                const typing = document.createElement('div');
+                typing.className = 'typing-indicator';
+                typing.id = 'typing-indicator';
+                typing.innerHTML = `
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                document.getElementById('chat-messages').appendChild(typing);
+                
+                // Scroll to bottom
+                const chatContainer = document.getElementById('chat-messages');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Simulate AI thinking and response
+                setTimeout(() => {
+                    document.getElementById('typing-indicator').remove();
+                    const response = generateAIResponse(message);
+                    addBotMessage(response);
+                }, 1500);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.textContent = text;
+            document.getElementById('chat-messages').appendChild(messageDiv);
+            
+            // Scroll to bottom
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function addBotMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai-message';
+            messageDiv.innerHTML = text; // Using innerHTML to allow basic formatting
+            document.getElementById('chat-messages').appendChild(messageDiv);
+            
+            // Scroll to bottom
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function generateAIResponse(question) {
+            // Medical knowledge base
+            const medicalKnowledge = {
+                'what is crp': "CRP (C-reactive protein) is a protein made by the liver that rises in response to inflammation. It's an acute-phase reactant used to detect inflammation in the body. Elevated levels can indicate infection, inflammatory conditions, or tissue damage.",
+                'normal crp levels': "Normal CRP levels are typically below 10 mg/L. Levels between 10-100 mg/L suggest mild inflammation or viral infection, while levels above 100 mg/L often indicate significant inflammation or bacterial infection.",
+                'crp vs esr': "Both CRP and ESR (Erythrocyte Sedimentation Rate) measure inflammation, but CRP rises and falls more quickly (within hours) while ESR changes more slowly (over days). CRP is more sensitive for acute inflammation, while ESR may be better for chronic conditions.",
+                'high sensitivity crp': "hs-CRP (high-sensitivity CRP) measures very low levels of CRP (0.5-10 mg/L) to assess cardiovascular risk. Levels &lt;1 mg/L = low risk, 1-3 mg/L = average risk, &gt;3 mg/L = high risk of cardiovascular disease.",
+                'crp test uses': "CRP testing is used to: 1) Detect infections, 2) Monitor inflammatory diseases (e.g., rheumatoid arthritis), 3) Assess cardiovascular risk (hs-CRP), 4) Monitor response to treatment in inflammatory conditions.",
+                'hello': "Hello! I'm your medical study assistant. How can I help you with your studies today?",
+                'hi': "Hi there! Ready to tackle some medical topics? What would you like to learn about?",
+                'help': "I can help with medical study topics including pathology, microbiology, pharmacology, and more. Try asking about specific concepts, diseases, or drugs."
+            };
+            
+            // Check for exact matches first
+            const lowerQuestion = question.toLowerCase();
+            if (medicalKnowledge[lowerQuestion]) {
+                return medicalKnowledge[lowerQuestion];
+            }
+            
+            // Check for keywords
+            if (lowerQuestion.includes('crp')) {
+                return "CRP (C-reactive protein) is an important inflammatory marker. It's produced by the liver in response to inflammation and rises quickly with tissue damage or infection. Would you like more specific information about CRP testing, interpretation, or clinical uses?";
+            }
+            
+            if (lowerQuestion.includes('inflammat')) {
+                return "Inflammation is the body's response to injury or infection. Acute inflammation involves neutrophils and resolves quickly, while chronic inflammation involves lymphocytes/macrophages and can cause tissue damage. Key mediators include histamine, prostaglandins, and cytokines. Need clarification on any part?";
+            }
+            
+            if (lowerQuestion.includes('patholog')) {
+                return "Pathology studies disease causes (etiology), mechanisms (pathogenesis), structural changes (morphology), and functional consequences. Anatomical pathology examines tissues/organs, while clinical pathology analyzes body fluids. What pathology topic interests you?";
+            }
+            
+            // Default response
+            return "I'm happy to help with your medical studies! Could you clarify or ask about a specific medical topic? For example, you could ask about CRP, inflammation, or any pathology concepts.";
+        }
+    </script>
+</body>
+</html>
